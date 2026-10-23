@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>EL KANA</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#008069">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#efeae2;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+header{background:#008069;color:white;padding:10px 12px;display:flex;align-items:center;gap:10px}
+header img{width:42px;height:42px;border-radius:50%;background:white;object-fit:cover}
+header h1{font-size:16px} header p{font-size:12px;opacity:.9}
+#chat{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px;background-color:#efeae2;position:relative}
+#chat::before{content:"";position:absolute;inset:0;background-image:url('/static/icon.png');background-size:120px;background-repeat:repeat;opacity:0.08;pointer-events:none}
+.msg{max-width:82%;padding:8px 12px;border-radius:10px;font-size:14px;box-shadow:0 1px 1px rgba(0,0,0,.2);background:white;z-index:2;position:relative}
+.msg.mine{background:#d9fdd3;align-self:flex-end} .msg.other{align-self:flex-start}
+.msg b{color:#008069;font-size:12px;display:block} .msg .time{font-size:10px;color:#667781;float:right;margin-left:8px;margin-top:6px}
+#inputArea{background:#f0f2f5;padding:7px;display:flex;gap:5px;align-items:center}
+#inputBox{flex:1;background:white;border-radius:25px;display:flex;align-items:center;padding:0 8px}
+#msgInput{flex:1;padding:12px 5px;border:none;outline:none;font-size:15px}
+.iconBtn{background:none;border:none;font-size:21px;cursor:pointer;padding:6px;color:#54656f}
+#sendBtn,#micBtn{background:#00a884;color:white;border:none;width:48px;height:48px;border-radius:50%;font-size:20px;cursor:pointer;flex-shrink:0}
+#emojiPanel{display:none;background:white;padding:10px;font-size:24px;flex-wrap:wrap;gap:8px;max-height:160px;overflow-y:auto}
+#attachMenu{display:none;background:white;padding:12px;gap:12px;justify-content:space-around;border-top:1px solid #eee}
+#attachMenu button{border:none;background:#f0f2f5;padding:12px;border-radius:12px;font-size:13px;cursor:pointer}
+nav{background:white;display:flex;justify-content:space-around;padding:7px 0;border-top:1px solid #ddd}
+nav button{border:none;background:none;text-align:center;font-size:11px;color:#666} nav button.active{color:#008069;font-weight:bold}
+.page{display:none;flex:1;overflow-y:auto;background:white;padding:12px} .page.active{display:block}
+.contact{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #f0f0f0;cursor:pointer}
+.contact img{width:48px;height:48px;border-radius:50%;background:#ddd;object-fit:cover}
+#login{position:fixed;inset:0;background:#008069;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:11px;padding:20px;color:white;overflow-y:auto}
+#login img{width:110px;height:110px;border-radius:25px;background:white;padding:5px}
+#login input{padding:13px 15px;border:none;border-radius:10px;width:300px;font-size:15px;outline:none}
+#login button{background:white;color:#008069;border:none;padding:13px 35px;border-radius:25px;font-weight:bold;font-size:16px;cursor:pointer}
+</style>
+</head>
+<body>
+<div id="login">
+<img src="/static/icon.png"><h2>EL KANA</h2><p style="font-size:12px">C.R.S.F.S.C.M. EL KANA MINISTRIES</p>
+<input id="fullname" placeholder="Nom complet *">
+<input id="phone" placeholder="Numéro ex: +243 995 076 564 *">
+<input id="gmail" placeholder="Compte Gmail">
+<input id="code" type="password" placeholder="Code de sécurité (4 chiffres) *">
+<button onclick="register()">Entrer dans EL KANA</button>
+<small style="font-size:12px;text-align:center;line-height:1.4;opacity:.9">Si tu n'as pas de Gmail, laisse vide.<br>Compte attaché à ton numéro.</small>
+<p id="err" style="color:#ffcc00;font-size:13px"></p>
+</div>
+<header>
+<button onclick="backToList()" style="background:none;border:none;color:white;font-size:22px">←</button>
+<img src="/static/icon.png">
+<div><h1 id="groupTitle">EL KANA</h1><p>En ligne • <span id="myNameShow"></span></p></div>
+<div style="margin-left:auto;display:flex;gap:15px">
+<button onclick="startCall('video')" style="background:none;border:none;font-size:22px">📹</button>
+<button onclick="startCall('audio')" style="background:none;border:none;font-size:22px">📞</button>
+</div>
+</header>
+<div id="callBox" style="display:none;position:fixed;inset:0;background:black;z-index:100;color:white;text-align:center;padding-top:80px">
+<h2 id="callText">Appel...</h2><video id="localVideo" autoplay playsinline style="width:90%;border-radius:10px;margin-top:20px"></video>
+<br><br><button onclick="endCall()" style="background:red;color:white;border:none;padding:15px 30px;border-radius:50px">Raccrocher</button>
+</div>
+<div id="page-disc" class="page active">
+<h2 style="color:#008069">Discussions</h2>
+<input id="newContactPhone" placeholder="Numéro du contact ex: +243..." style="width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin:10px 0">
+<input id="newContactName" placeholder="Nom du contact" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin-bottom:10px">
+<button onclick="addContact()" style="width:100%;background:#008069;color:white;border:none;padding:12px;border-radius:10px;font-weight:bold">+ Ajouter Contact</button>
+<div id="contactsList"></div>
+</div>
+<div id="page-chat" class="page" style="padding:0;display:flex;flex-direction:column;background:transparent">
+<div id="chat"></div>
+<div id="emojiPanel"><span onclick="addEmoji('😀')">😀</span><span onclick="addEmoji('😂')">😂</span><span onclick="addEmoji('❤️')">❤️</span><span onclick="addEmoji('🙏')">🙏</span><span onclick="addEmoji('🔥')">🔥</span><span onclick="addEmoji('👍')">👍</span><span onclick="addEmoji('✝️')">✝️</span><span onclick="addEmoji('🕊️')">🕊️</span><span onclick="addEmoji('📖')">📖</span></div>
+<div id="attachMenu"><button onclick="importFile('photo')">🖼️<br>Photo</button><button onclick="importFile('video')">🎥<br>Vidéo</button><button onclick="importFile('doc')">📄<br>PDF/Word</button><button onclick="sendLocation()">📍<br>Position</button></div>
+<div id="inputArea">
+<div id="inputBox"><button class="iconBtn" onclick="toggleEmoji()">😊</button><input id="msgInput" placeholder="Message" onkeypress="if(event.key==='Enter')sendMsg()" oninput="checkInput()"><button class="iconBtn" onclick="toggleAttach()">📎</button><button class="iconBtn" onclick="importFile('photo')">📷</button></div>
+<button id="micBtn" onclick="startVoice()">🎤</button><button id="sendBtn" onclick="sendMsg()" style="display:none">➤</button>
+</div>
+</div>
+<div id="page-actus" class="page"><h2>Actus</h2><p style="margin-top:10px">Statut</p><div style="display:flex;gap:10px;margin-top:10px"><div style="text-align:center"><img src="/static/icon.png" style="width:70px;height:90px;border-radius:10px"><br><small>Mon statut</small></div></div></div>
+<div id="page-comm" class="page"><h2>Communautés</h2><div class="contact"><img src="/static/icon.png"><div><b>C.R.S.F.S.C.M. EL KANA</b><br><small>Communauté</small></div></div></div>
+<div id="page-appels" class="page"><h2>Appels</h2><p style="margin-top:10px">Aucun appel récent</p></div>
+<nav><button class="active" onclick="showPage('disc',this)">💬<br>Discussions</button><button onclick="showPage('actus',this)">⭕<br>Actus</button><button onclick="showPage('comm',this)">👥<br>Communautés</button><button onclick="showPage('appels',this)">📞<br>Appels</button></nav>
+<script>
+let user=JSON.parse(localStorage.getItem('elkana_user')||'null');
+let contacts=JSON.parse(localStorage.getItem('elkana_contacts')||'[]');
+let activeChat=null; let recorder,chunks=[];
+if(user){document.getElementById('login').style.display='none';document.getElementById('myNameShow').textContent=user.fullname;}
+function register(){let fullname=document.getElementById('fullname').value.trim();let phone=document.getElementById('phone').value.trim();let gmail=document.getElementById('gmail').value.trim();let code=document.getElementById('code').value.trim();if(!fullname||!phone||code.length<4){document.getElementById('err').textContent='Remplis Nom, Numéro et Code 4 chiffres';return;}user={fullname,phone,gmail:gmail||'Lié au numéro: '+phone,code};localStorage.setItem('elkana_user',JSON.stringify(user));fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(user)});document.getElementById('login').style.display='none';document.getElementById('myNameShow').textContent=fullname;renderContacts();syncContacts();}
+function addContact(){let phone=document.getElementById('newContactPhone').value.trim();let name=document.getElementById('newContactName').value.trim()||phone;if(!phone)return alert('Mets le numéro');if(!contacts.find(c=>c.phone===phone))contacts.push({phone,name});localStorage.setItem('elkana_contacts',JSON.stringify(contacts));document.getElementById('newContactPhone').value='';document.getElementById('newContactName').value='';renderContacts();}
+async function syncContacts(){try{let r=await fetch('/api/users');let all=await r.json();let ch=false;all.forEach(u=>{if(u.phone!==user.phone && !contacts.find(c=>c.phone===u.phone)){contacts.push({phone:u.phone,name:u.fullname});ch=true;}});if(ch){localStorage.setItem('elkana_contacts',JSON.stringify(contacts));renderContacts();}}catch(e){}}
+function renderContacts(){let list=document.getElementById('contactsList');list.innerHTML='';contacts.forEach(c=>{let div=document.createElement('div');div.className='contact';div.onclick=()=>openChat(c.phone,c.name);div.innerHTML=`<img src="/static/icon.png"><div style="flex:1"><b>${c.name}</b><br><small>${c.phone} • Appuie pour discuter</small></div>`;list.appendChild(div);});}
+function openChat(phone,name){activeChat=phone;document.getElementById('groupTitle').textContent=name;document.getElementById('page-disc').classList.remove('active');document.getElementById('page-chat').classList.add('active');loadMessages();}
+function backToList(){activeChat=null;document.getElementById('page-chat').classList.remove('active');document.getElementById('page-disc').classList.add('active');document.getElementById('groupTitle').textContent='EL KANA';renderContacts();}
+function checkInput(){let v=document.getElementById('msgInput').value.trim();document.getElementById('sendBtn').style.display=v?'block':'none';document.getElementById('micBtn').style.display=v?'none':'block';}
+function toggleEmoji(){let p=document.getElementById('emojiPanel');p.style.display=p.style.display==='flex'?'none':'flex';}
+function addEmoji(e){document.getElementById('msgInput').value+=e;checkInput();}
+function toggleAttach(){let m=document.getElementById('attachMenu');m.style.display=m.style.display==='flex'?'none':'flex';}
+async function startVoice(){try{let s=await navigator.mediaDevices.getUserMedia({audio:true});recorder=new MediaRecorder(s);chunks=[];recorder.ondataavailable=e=>chunks.push(e.data);recorder.onstop=()=>{sendMsg('🎤 Message vocal');};recorder.start();document.getElementById('micBtn').textContent='⏹️';document.getElementById('micBtn').onclick=()=>{recorder.stop();document.getElementById('micBtn').textContent='🎤';document.getElementById('micBtn').onclick=startVoice;};}catch(e){alert('Autorise micro');}}
+function importFile(type){let inp=document.createElement('input');inp.type='file';if(type==='photo')inp.accept='image/*';if(type==='video')inp.accept='video/*';if(type==='doc')inp.accept='.pdf,.doc,.docx,.xls,.txt';inp.onchange=()=>{let f=inp.files[0];if(f)sendMsg('📎 '+f.name);};inp.click();}
+function sendLocation(){navigator.geolocation.getCurrentPosition(p=>{let link='https://www.google.com/maps?q='+p.coords.latitude+','+p.coords.longitude;sendMsg('📍 '+link);},()=>alert('Active GPS'));}
+async function startCall(kind){document.getElementById('callBox').style.display='block';document.getElementById('callText').textContent=kind==='video'?'Appel Vidéo EL KANA...':'Appel Vocal EL KANA...';try{let s=await navigator.mediaDevices.getUserMedia({video:kind==='video',audio:true});document.getElementById('localVideo').srcObject=s;window._stream=s;}catch(e){alert('Autorise caméra/micro');}}
+function endCall(){if(window._stream)window._stream.getTracks().forEach(t=>t.stop());document.getElementById('callBox').style.display='none';}
+function showPage(p,btn){document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));document.querySelectorAll('nav button').forEach(e=>e.classList.remove('active'));if(btn)btn.classList.add('active');if(p==='disc')document.getElementById('page-disc').classList.add('active');if(p==='actus')document.getElementById('page-actus').classList.add('active');if(p==='comm')document.getElementById('page-comm').classList.add('active');if(p==='appels')document.getElementById('page-appels').classList.add('active');}
+async function loadMessages(){try{let r=await fetch('/api/messages');let d=await r.json();let filtered=activeChat?d.filter(m=>(m.from===user.phone&&m.to===activeChat)||(m.from===activeChat&&m.to===user.phone)):[];let c=document.getElementById('chat');c.innerHTML='';filtered.forEach(m=>{let div=document.createElement('div');div.className='msg '+(m.from===user.phone?'mine':'other');div.innerHTML=`<b>${m.name}</b>${m.text}<span class="time">${m.time||''}</span>`;c.appendChild(div);});c.scrollTop=c.scrollHeight;d.forEach(m=>{if(m.to===user.phone&&m.from!==user.phone&&!contacts.find(x=>x.phone===m.from)){contacts.push({phone:m.from,name:m.name});localStorage.setItem('elkana_contacts',JSON.stringify(contacts));}});if(document.getElementById('page-disc').classList.contains('active'))renderContacts();}catch(e){}}
+async function sendMsg(custom){if(!activeChat)return alert('Choisis d’abord un contact');let inp=document.getElementById('msgInput');let text=custom||inp.value.trim();if(!text||!user)return;let time=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});await fetch('/api/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:user.fullname,text,time,from:user.phone,to:activeChat,phone:user.phone})});if(inp)inp.value='';checkInput();loadMessages();}
+setInterval(loadMessages,2000);setInterval(syncContacts,3000);loadMessages();renderContacts();syncContacts();
+</script>
+</body>
+</html>

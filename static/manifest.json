@@ -1,0 +1,9 @@
+{
+  "name": "EL KANA Ministries",
+  "short_name": "EL KANA",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#008069",
+  "theme_color": "#008069",
+  "icons": [{"src": "/static/icon.png", "sizes": "512x512", "type": "image/png"}]
+}
