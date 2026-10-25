@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#075e54">
+<meta name="description" content="EL KANA MINISTRIES TCHAT : communication et ressources bibliques.">
+<title>EL KANA MINISTRIES TCHAT</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #f4f7f5; color: #222; }
+header { background: #075e54; color: white; padding: 20px 12px; text-align: center; }
+header h1 { font-size: 22px; }
+header p { margin-top: 7px; font-size: 13px; }
+nav { display: flex; overflow-x: auto; background: white; border-bottom: 1px solid #ddd; }
+nav button { flex: 1; min-width: 90px; padding: 14px 8px; border: none; background: white; color: #075e54; font-weight: bold; cursor: pointer; }
+nav button.active { background: #d9fdd3; border-bottom: 3px solid #075e54; }
+main { max-width: 850px; margin: auto; padding: 18px; }
+.page { display: none; }
+.page.active { display: block; }
+h2 { margin-bottom: 15px; color: #075e54; }
+.card { background: white; padding: 17px; margin-bottom: 12px; border-radius: 12px; box-shadow: 0 2px 6px #00000010; }
+.card h3 { margin-bottom: 8px; }
+.card p { line-height: 1.5; }
+.card button, .action { margin-top: 10px; padding: 10px 14px; background: #075e54; color: white; border: none; border-radius: 7px; cursor: pointer; }
+input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; font: inherit; }
+footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+.notice { background: #fff3cd; padding: 12px; border-radius: 8px; margin-bottom: 15px; line-height: 1.5; }
+@media (max-width: 500px) { header h1 { font-size: 19px; } main { padding: 12px; } }
+</style>
+</head>
+<body>
+<header>
+<h1>EL KANA MINISTRIES TCHAT</h1>
+<p>Communiquer • Étudier la Bible • Grandir spirituellement</p>
+</header>
+<nav>
+<button class="active" onclick="ouvrirPage('accueil', this)">Accueil</button>
+<button onclick="ouvrirPage('discussions', this)">Discussions</button>
+<button onclick="ouvrirPage('actus', this)">Actus</button>
+<button onclick="ouvrirPage('communaute', this)">Communautés</button>
+<button onclick="ouvrirPage('bible', this)">Bible</button>
+<button onclick="ouvrirPage('infos', this)">Informations</button>
+</nav>
+<main>
+<section id="accueil" class="page active">
+<div class="card"><h2>Bienvenue chez EL KANA</h2><p>Bienvenue sur EL KANA MINISTRIES TCHAT, votre espace de communication, de partage et de découverte biblique.</p></div>
+<div class="card"><h3>📖 Découvrez la Bible</h3><p>Accédez à la lecture biblique, aux études, aux thèmes chrétiens et aux ressources pour approfondir votre foi.</p><button onclick="ouvrirPage('bible', document.querySelectorAll('nav button')[4])">Ouvrir la Bible</button></div>
+</section>
+<section id="discussions" class="page">
+<h2>💬 Discussions</h2>
+<div class="notice">Cette première version présente l'interface. Les conversations entre utilisateurs nécessiteront ensuite une base de données et une authentification.</div>
+<div class="card"><h3>Messagerie</h3><input id="message" placeholder="Écrire un message..."><button onclick="previsualiserMessage()">Prévisualiser</button><p id="apercu"></p></div>
+</section>
+<section id="actus" class="page"><h2>🟢 Actus</h2><div class="card"><h3>Actualités et statuts</h3><p>Cette rubrique accueillera les publications et les statuts des membres.</p></div></section>
+<section id="communaute" class="page"><h2>👥 Communautés</h2><div class="card"><h3>Communautés chrétiennes</h3><p>Un espace prévu pour les groupes de prière, les études bibliques et les échanges entre membres.</p></div></section>
+<section id="bible" class="page">
+<h2>📖 Espace biblique</h2>
+<div class="card"><h3>1. Lecture biblique</h3><p>Lire et méditer les livres de la Bible.</p></div>
+<div class="card"><h3>2. Étude biblique</h3><p>Approfondir le contexte, le sens et les enseignements des passages.</p></div>
+<div class="card"><h3>3. Dictionnaire biblique</h3><p>Découvrir la signification des mots, des noms et des notions bibliques.</p></div>
+<div class="card"><h3>4. Thèmes chrétiens et bibliques</h3><p>Explorer des thèmes comme la foi, la prière, la multiplication et le Saint-Esprit.</p></div>
+<div class="card"><h3>5. Prière et exhortation</h3><p>Retrouver des sujets de prière, des méditations et des encouragements spirituels.</p></div>
+<div class="card"><h3>6. Guide biblique</h3><p>Apprendre à étudier les Écritures et à préparer une prédication.</p></div>
+<div class="card"><h3>7. Explications des passages bibliques</h3><p>Comprendre le contexte, le sens, les enseignements et les applications des passages.</p></div>
+</section>
+<section id="infos" class="page"><h2>ℹ️ Informations</h2><div class="card"><h3>EL KANA MINISTRIES</h3><p>Un espace dédié à la communication, à l'étude biblique et à la croissance spirituelle.</p></div></section>
+</main>
+<footer>EL KANA MINISTRIES TCHAT</footer>
+<script>
+function ouvrirPage(id, bouton) {
+    document.querySelectorAll('.page').forEach(function(page) {
+        page.classList.remove('active');
+    });
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('nav button').forEach(function(btn) {
+        btn.classList.remove('active');
+    });
+    if (bouton) bouton.classList.add('active');
+    window.scrollTo(0, 0);
+}
+function previsualiserMessage() {
+    const champ = document.getElementById('message');
+    const apercu = document.getElementById('apercu');
+    if (!champ.value.trim()) {
+        apercu.textContent = 'Écris d’abord un message.';
+        return;
+    }
+    apercu.textContent = 'Aperçu : ' + champ.value;
+}
+</script>
+</body>
+</html>
