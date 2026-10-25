@@ -94,3 +94,12 @@ function initialiserRecherche() {
         });
     });
 }
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./service-worker.js")
+      .catch(function (error) {
+        console.error("Erreur du service worker :", error);
+      });
+  });
+}
