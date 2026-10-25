@@ -1,15 +1,7 @@
-/* EL KANA MINISTRIES TCHAT — Interactions principales */
- 
 "use strict";
  
 document.addEventListener("DOMContentLoaded", function () {
-    initialiserNavigation();
-    initialiserMessagerieDemo();
-    initialiserRecherche();
-});
- 
-/* Navigation entre les rubriques */
-function initialiserNavigation() {
+    // Navigation entre les rubriques
     const boutons = document.querySelectorAll("[data-page]");
     const pages = document.querySelectorAll(".page");
  
@@ -19,87 +11,63 @@ function initialiserNavigation() {
             const pageCible = document.getElementById(cible);
  
             if (!pageCible) {
-                console.warn("Rubrique introuvable :", cible);
+                console.error("Rubrique introuvable :", cible);
                 return;
             }
  
             pages.forEach(function (page) {
                 page.classList.remove("active");
+                page.hidden = true;
             });
  
             boutons.forEach(function (element) {
                 element.classList.remove("active");
             });
  
+            pageCible.hidden = false;
             pageCible.classList.add("active");
             bouton.classList.add("active");
  
             window.scrollTo({ top: 0, behavior: "smooth" });
         });
     });
-}
  
-/* Démonstration locale de la messagerie */
-function initialiserMessagerieDemo() {
+    // Messages de démonstration
     const formulaire = document.getElementById("form-message");
     const champ = document.getElementById("message");
     const liste = document.getElementById("liste-messages");
  
-    if (!formulaire || !champ || !liste) {
-        return;
-    }
+    if (formulaire && champ && liste) {
+        formulaire.addEventListener("submit", function (evenement) {
+            evenement.preventDefault();
+            const texte = champ.value.trim();
+            if (!texte) return;
  
-    formulaire.addEventListener("submit", function (evenement) {
-        evenement.preventDefault();
+            const message = document.createElement("div");
+            message.className = "card message-local";
  
-        const texte = champ.value.trim();
+            const contenu = document.createElement("p");
+            contenu.textContent = texte;
+            message.appendChild(contenu);
+            liste.appendChild(message);
  
-        if (!texte) {
-            return;
-        }
- 
-        const message = document.createElement("div");
-        message.className = "card message-local";
- 
-        const contenu = document.createElement("p");
-        contenu.textContent = texte;
- 
-        const indication = document.createElement("small");
-        indication.textContent = "Message de démonstration — enregistré uniquement sur cette page.";
- 
-        message.appendChild(contenu);
-        message.appendChild(indication);
-        liste.appendChild(message);
- 
-        champ.value = "";
-        champ.focus();
-    });
-}
- 
-/* Recherche simple dans les cartes visibles */
-function initialiserRecherche() {
-    const recherche = document.getElementById("recherche");
-    const cartes = document.querySelectorAll(".card");
- 
-    if (!recherche) {
-        return;
-    }
- 
-    recherche.addEventListener("input", function () {
-        const terme = recherche.value.trim().toLowerCase();
- 
-        cartes.forEach(function (carte) {
-            const correspond = carte.textContent.toLowerCase().includes(terme);
-            carte.hidden = terme !== "" && !correspond;
+            champ.value = "";
+            champ.focus();
         });
-    });
-}
-
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", function () {
-    navigator.serviceWorker.register("./service-worker.js")
-      .catch(function (error) {
-        console.error("Erreur du service worker :", error);
-      });
-  });
-}
+    }
+ 
+    // Recherche dans la page
+    const recherche = document.getElementById("recherche");
+ 
+    if (recherche) {
+        recherche.addEventListener("input", function () {
+            const terme = recherche.value.trim().toLowerCase();
+            const cartes = document.querySelectorAll(".card");
+ 
+            cartes.forEach(function (carte) {
+                carte.hidden = terme !== "" &&
+                    !carte.textContent.toLowerCase().includes(terme);
+            });
+        });
+    }
+});
