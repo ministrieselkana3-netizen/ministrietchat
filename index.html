@@ -64,15 +64,20 @@
       <div class="card">
         <h2>💬 Messages</h2>
         <p>Écris un message pour tester l’interface. Pour échanger réellement avec d’autres personnes, une base de données et un serveur devront être ajoutés.</p>
-        <form id="form-message" class="message-form">
-          <label for="message">Ton message</label>
-          <textarea id="message" rows="3" placeholder="Écris ton message ici…" required></textarea>
-          <button type="submit" class="primary-button">Envoyer</button>
-        </form>
-      </div>
-      <div class="card">
-        <h3>Messages de cette session</h3>
-        <div id="liste-messages" aria-live="polite">
+      <form id="form-message" class="audio-message-form">
+  <label for="message">Message écrit</label>
+  <input id="message" type="text" placeholder="Écrire un message..." autocomplete="off">
+  <button type="submit">Envoyer</button>
+</form>
+
+<div class="audio-controls">
+  <button type="button" id="demarrer-audio">🎤 Enregistrer un audio</button>
+  <button type="button" id="arreter-audio" disabled>⏹ Arrêter</button>
+  <p id="etat-audio" aria-live="polite">Prêt à enregistrer.</p>
+  <div id="apercu-audio"></div>
+</div>
+
+       <div id="liste-messages" aria-live="polite">
           <p class="muted">Aucun message pour le moment.</p>
         </div>
       </div>
