@@ -1,15 +1,2 @@
-{
-  "name": "Apôtre Moïse NKG Ministries",
-  "short_name": "NKG",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#25D366",
-  "icons": [
-    {
-      "src": "https://via.placeholder.com/512/25D366/ffffff?text=MN",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
-}
+
 
